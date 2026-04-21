@@ -1,0 +1,10 @@
+rules_version = '2';
+
+// Do not deploy until Step 2. Enable the Storage product in the Console first (Step 1).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

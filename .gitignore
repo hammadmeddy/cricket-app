@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# Firebase
+firebase-debug.log
+
 # Expo
 .expo/
 dist/
@@ -31,6 +34,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
