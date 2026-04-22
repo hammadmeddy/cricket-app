@@ -1,30 +1,54 @@
 {
   "expo": {
-    "name": "cricket-app",
+    "name": "Crease",
     "slug": "cricket-app",
+    "owner": "elogixit",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/app-icon.png",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/app-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0a0f0c"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.cricketapp.review",
+      "icon": "./assets/app-icon.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/app-icon.png",
+        "backgroundColor": "#0a0f0c"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0a0f0c",
+          "image": "./assets/app-icon.png",
+          "imageWidth": 260,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#0a0f0c",
+            "image": "./assets/app-icon.png"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d0fec74d-0d0c-47e1-adb4-23be539e3108"
+      }
     }
   }
 }

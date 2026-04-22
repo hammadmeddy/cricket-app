@@ -6,6 +6,7 @@ type AppState = {
 };
 
 const initialState: AppState = {
+  /** Synced from Firestore `users/{uid}.role` (admin vs read-only). Default until profile loads. */
   role: 'player',
 };
 

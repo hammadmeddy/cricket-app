@@ -1,10 +1,52 @@
 rules_version = '2';
 
-// Dev: any signed-in user can read/write. Replace with role-based rules before production.
+// Guests: anonymous sign-in → read all data, cannot write.
+// Admins: you add them only in Firebase (Auth user + Firestore users/{uid} role "admin"); the app never registers users.
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function currentUserDoc() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(currentUserDoc())
+        && get(currentUserDoc()).data.role == 'admin';
+    }
+
+    /** Email/password (or any linked non-anonymous account). Anonymous guests stay read-only. */
+    function isStaffAccount() {
+      return signedIn()
+        && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    function canMutateAppData() {
+      return isAdmin() || isStaffAccount();
+    }
+
+    match /users/{userId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role == 'viewer';
+      allow update: if signedIn() && (
+        isAdmin()
+        || (
+          request.auth.uid == userId
+          && request.resource.data.role == resource.data.role
+        )
+      );
+      allow delete: if isAdmin();
+    }
+
     match /{document=**} {
-      allow read, write: if request.auth != null;
+      allow read: if signedIn();
+      allow write: if canMutateAppData();
     }
   }
 }

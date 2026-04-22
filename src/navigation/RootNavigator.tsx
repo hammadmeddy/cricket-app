@@ -1,15 +1,14 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { Text } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { colors } from '../theme/colors';
-import type { RootTabParamList } from './types';
-import DashboardScreen from '../screens/DashboardScreen';
-import SquadsScreen from '../screens/SquadsScreen';
-import FixturesScreen from '../screens/FixturesScreen';
-import LiveScreen from '../screens/LiveScreen';
-import LeadersScreen from '../screens/LeadersScreen';
+import type { RootStackParamList } from './types';
+import MainTabNavigator from './MainTabNavigator';
+import TeamDetailScreen from '../screens/TeamDetailScreen';
+import SeriesDetailScreen from '../screens/SeriesDetailScreen';
+import MatchScoringScreen from '../screens/MatchScoringScreen';
+import AdminSignInScreen from '../screens/AdminSignInScreen';
 
-const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const navTheme = {
   ...DefaultTheme,
@@ -24,58 +23,53 @@ const navTheme = {
   },
 };
 
-function tabIcon(label: string) {
-  return function Icon() {
-    return (
-      <Text style={{ fontSize: 18 }} accessibilityElementsHidden>
-        {label}
-      </Text>
-    );
-  };
-}
-
 export default function RootNavigator() {
   return (
     <NavigationContainer theme={navTheme}>
-      <Tab.Navigator
+      <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: colors.surface },
           headerTintColor: colors.text,
-          headerTitleStyle: { fontWeight: '600' },
-          tabBarStyle: {
-            backgroundColor: colors.surface,
-            borderTopColor: colors.border,
-          },
-          tabBarActiveTintColor: colors.accent,
-          tabBarInactiveTintColor: colors.textMuted,
+          headerTitleStyle: { fontWeight: '600', fontSize: 17 },
+          headerShadowVisible: false,
+          contentStyle: { backgroundColor: colors.background },
         }}
       >
-        <Tab.Screen
-          name="Dashboard"
-          component={DashboardScreen}
-          options={{ tabBarIcon: tabIcon('◆') }}
+        <Stack.Screen
+          name="MainTabs"
+          component={MainTabNavigator}
+          options={{ headerShown: false }}
         />
-        <Tab.Screen
-          name="Squads"
-          component={SquadsScreen}
-          options={{ tabBarIcon: tabIcon('◎') }}
+        <Stack.Screen
+          name="AdminSignIn"
+          component={AdminSignInScreen}
+          options={{ title: 'Staff', presentation: 'modal', headerBackTitle: 'Close' }}
         />
-        <Tab.Screen
-          name="Fixtures"
-          component={FixturesScreen}
-          options={{ tabBarIcon: tabIcon('📅') }}
+        <Stack.Screen
+          name="TeamDetail"
+          component={TeamDetailScreen}
+          options={({ route }) => ({
+            title: route.params.teamName,
+            headerBackTitle: 'Squads',
+          })}
         />
-        <Tab.Screen
-          name="Live"
-          component={LiveScreen}
-          options={{ tabBarIcon: tabIcon('▶') }}
+        <Stack.Screen
+          name="SeriesDetail"
+          component={SeriesDetailScreen}
+          options={({ route }) => ({
+            title: route.params.seriesName,
+            headerBackTitle: 'Fixtures',
+          })}
         />
-        <Tab.Screen
-          name="Leaders"
-          component={LeadersScreen}
-          options={{ title: 'Stats', tabBarIcon: tabIcon('★') }}
+        <Stack.Screen
+          name="MatchScoring"
+          component={MatchScoringScreen}
+          options={({ route }) => ({
+            title: route.params.headerTitle,
+            headerBackTitle: 'Back',
+          })}
         />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
